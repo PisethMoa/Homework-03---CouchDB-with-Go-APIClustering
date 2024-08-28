@@ -1,0 +1,261 @@
+basePath: /
+definitions:
+  main.DeleteResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  main.Response:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      rev:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a simple API to interact with CouchDB and perform CRUD operations.
+  title: Student API
+  version: "1.0"
+paths:
+  /changes:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves changes from CouchDB using a specified filter
+      parameters:
+      - description: Address
+        in: query
+        name: address
+        type: string
+      - description: Age
+        in: query
+        name: age
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Failed to retrieve changes.
+          schema:
+            type: string
+      summary: Get changes from CouchDB with a filter
+      tags:
+      - changes
+  /document/{docID}:
+    delete:
+      description: Deletes a document from the CouchDB database
+      parameters:
+      - description: Document ID
+        in: path
+        name: docID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Document deleted successfully
+          schema:
+            $ref: '#/definitions/main.DeleteResponse'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Document not found
+          schema:
+            type: string
+        "500":
+          description: Failed to delete document
+          schema:
+            type: string
+      summary: Delete a document
+      tags:
+      - document
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing document in the CouchDB database
+      parameters:
+      - description: Document ID
+        in: path
+        name: docID
+        required: true
+        type: string
+      - description: Document Data
+        in: body
+        name: document
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Document updated successfully
+          schema:
+            $ref: '#/definitions/main.Response'
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/main.Response'
+        "404":
+          description: Document not found
+          schema:
+            $ref: '#/definitions/main.Response'
+        "500":
+          description: Failed to update document
+          schema:
+            $ref: '#/definitions/main.Response'
+      summary: Update an existing document
+      tags:
+      - document
+  /document/{id}:
+    get:
+      description: Retrieves a specific document from the CouchDB student database
+        by its ID
+      parameters:
+      - description: Document ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Document retrieved successfully.
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Document not found.
+          schema:
+            type: string
+        "500":
+          description: Failed to retrieve document.
+          schema:
+            type: string
+      summary: Get a document by ID
+      tags:
+      - document
+  /documents:
+    get:
+      description: Retrieves all documents from the CouchDB student database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Documents retrieved successfully.
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+        "500":
+          description: Failed to retrieve documents.
+          schema:
+            type: string
+      summary: Get all documents
+      tags:
+      - document
+  /file/{docID}/{filename}:
+    get:
+      description: Retrieves an attachment from a CouchDB document
+      parameters:
+      - description: Document ID
+        in: path
+        name: docID
+        required: true
+        type: string
+      - description: Filename
+        in: path
+        name: filename
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: File downloaded successfully
+          schema:
+            type: file
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: File not found
+          schema:
+            type: string
+        "500":
+          description: Failed to retrieve file
+          schema:
+            type: string
+      summary: Get a file
+      tags:
+      - file
+  /insert:
+    post:
+      consumes:
+      - application/json
+      description: Inserts a new document into the CouchDB
+      parameters:
+      - description: Document
+        in: body
+        name: document
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Document inserted successfully.
+          schema:
+            type: string
+        "400":
+          description: Failed to decode JSON.
+          schema:
+            type: string
+        "500":
+          description: Failed to insert document.
+          schema:
+            type: string
+      summary: Insert a document
+      tags:
+      - document
+  /upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a file to CouchDB as an attachment
+      parameters:
+      - description: File to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: Document ID
+        in: formData
+        name: docID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: File uploaded successfully.
+          schema:
+            type: string
+      summary: Uploads a file
+swagger: "2.0"

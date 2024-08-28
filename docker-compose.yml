@@ -1,0 +1,67 @@
+services:
+  couchdb-0:
+    restart: always
+    environment:
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: 123
+      COUCHDB_SECRET: piseth
+      NODENAME: couchdb-0.local
+      ERL_FLAGS: "-setcookie testing"
+    image: couchdb:3
+    networks:
+      network:
+        aliases:
+          - couchdb-0.local
+    ports:
+      - "5984:5984"
+    volumes:
+      - "data-couch-0:/opt/couchdb/data"
+      - "cfg-couch-0:/opt/couchdb/etc/local.d"
+
+  couchdb-1:
+    restart: always
+    environment:
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: 123
+      COUCHDB_SECRET: piseth
+      NODENAME: couchdb-1.local
+      ERL_FLAGS: "-setcookie testing"
+    image: couchdb:3
+    networks:
+      network:
+        aliases:
+          - couchdb-1.local
+    ports:
+      - "5985:5984"
+    volumes:
+      - "data-couch-1:/opt/couchdb/data"
+      - "cfg-couch-1:/opt/couchdb/etc/local.d"
+
+  couchdb-2:
+    restart: always
+    environment:
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: 123
+      COUCHDB_SECRET: piseth
+      NODENAME: couchdb-2.local
+      ERL_FLAGS: "-setcookie testing"
+    image: couchdb:3
+    networks:
+      network:
+        aliases:
+          - couchdb-2.local
+    ports:
+      - "5986:5984"
+    volumes:
+      - "data-couch-2:/opt/couchdb/data"
+      - "cfg-couch-2:/opt/couchdb/etc/local.d"
+networks:
+  network:
+
+volumes:
+  data-couch-0:
+  cfg-couch-0:
+  data-couch-1:
+  cfg-couch-1:
+  data-couch-2:
+  cfg-couch-2:
